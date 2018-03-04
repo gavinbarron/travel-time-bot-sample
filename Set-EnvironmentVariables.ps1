@@ -1,0 +1,6 @@
+$env:storageConnectionString=""
+$env:docDbHost=""
+$env:docDbKey=""
+$env:host="8888888888*.ngrok.io"
+$env:azAppId=""
+$env:azAppPassword=""
