@@ -1,7 +1,9 @@
+module.exports = function (context) {
+{
 /*-----------------------------------------------------------------------------
-A simple echo bot for the Microsoft Bot Framework. 
+A simple echo bot for the Microsoft Bot Framework.
 -----------------------------------------------------------------------------*/
-
+'use strict';
 
 const path = require('path');
 const restify = require('restify');
@@ -15,7 +17,7 @@ const cfg = require('./config');
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3979, function () {
-   console.log('%s listening to %s', server.name, server.url); 
+   console.log('%s listening to %s', server.name, server.url);
 });
 
 const storageConnectionString = process.env.storageConnectionString;
@@ -32,27 +34,27 @@ var documentDbOptions = {
 var botDocDbClient = new azure.DocumentDbClient(documentDbOptions);
 var tableStorage = new azure.AzureBotStorage({ gzipData: false }, botDocDbClient);
 
-  
+
 // Create chat connector for communicating with the Bot Framework Service
 // We don't need to have these environment variables set in the development environment
 var connector = new builder.ChatConnector({
     appId: process.env.MicrosoftAppId,
     appPassword: process.env.MicrosoftAppPassword,
     stateEndpoint: process.env.BotStateEndpoint,
-    openIdMetadata: process.env.BotOpenIdMetadata 
+    openIdMetadata: process.env.BotOpenIdMetadata
 });
 
-// Listen for messages from users 
+// Listen for messages from users
 server.post('/api/messages', connector.listen());
 
 // Serve the magic code page for login.
-server.get('/code', restify.plugins.serveStatic({ 
+server.get('/code', restify.plugins.serveStatic({
     'directory': path.join(__dirname, 'public'),
     'file': 'code.html'
 }));
 
 /*----------------------------------------------------------------------------------------
-* Bot Storage: This is a great spot to register the private state storage for your bot. 
+* Bot Storage: This is a great spot to register the private state storage for your bot.
 * We provide adapters for Azure Table, CosmosDb, SQL Azure, or you can implement your own!
 * For samples and documentation, see: https://github.com/Microsoft/BotBuilder-Azure
 * ---------------------------------------------------------------------------------------- */
@@ -164,7 +166,7 @@ bot.dialog('/meetingRequested', [
             session.endDialog();
         }
         session.send(`I'll accept that meeting for you.`);
-        
+
         // enqueue a message to accept the meeting
         var queueSvc = azureStorage.createQueueService(storageConnectionString);
         queueSvc.createQueueIfNotExists('accept-meeting', function(err, result, response){
@@ -255,7 +257,7 @@ bot.dialog('/requestTravelTime',[
     },
     (session, results) => {
         // this returns the results of the /customTravelLength Dialog.
-        session.endDialogWithResult(results); 
+        session.endDialogWithResult(results);
     }
 ]);
 
@@ -281,7 +283,7 @@ bot.dialog('/customTravelLength', [
         if (minutes === 0) {
             session.replaceDialog('/customTravelLength', {reprompt: true});
         } else {
-            session.endDialogWithResult({ response: minutes}); 
+            session.endDialogWithResult({ response: minutes});
         }
     }
 ]);
@@ -350,7 +352,7 @@ bot.dialog('help', function (session, args, next) {
 .triggerAction({
     matches: /^help$/i,
     onSelectAction: (session, args, next) => {
-        // Add the help dialog to the dialog stack 
+        // Add the help dialog to the dialog stack
         // (override the default behavior of replacing the stack)
         session.beginDialog(args.action, args);
     }
@@ -364,9 +366,8 @@ bot.dialog('exit', function (session, args, next) {
 .triggerAction({
     matches: /^(exit)|(cancel)|(quit)$/i,
     onSelectAction: (session, args, next) => {
-        // Add the exit dialog to the dialog stack 
+        // Add the exit dialog to the dialog stack
         session.beginDialog(args.action, args);
     }
 });
-
-
+}
