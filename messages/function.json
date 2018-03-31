@@ -16,8 +16,8 @@
    "name": "res"
   }
  ],
+ "scriptFile": "../.funcpack/index.js",
  "_originalEntryPoint": false,
  "_originalScriptFile": "run.js",
- "scriptFile": "../.funcpack/index.js",
  "entryPoint": "messages"
 }
