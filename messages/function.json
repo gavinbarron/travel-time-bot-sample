@@ -18,6 +18,6 @@
  ],
  "_originalEntryPoint": false,
  "_originalScriptFile": "app.js",
- "scriptFile": "./app.js",
- "entryPoint": "false"
+ "scriptFile": "../.funcpack/index.js",
+ "entryPoint": "messages"
 }
