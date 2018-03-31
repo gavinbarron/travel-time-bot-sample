@@ -1,3 +1,3 @@
 module.exports = {
-    "messages": require("../messages/app.js")
+    "messages": require("../messages/run.js")
 }
