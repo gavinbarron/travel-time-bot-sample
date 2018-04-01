@@ -61,7 +61,6 @@ server.use(expressSession({
     saveUninitialized: false
 }));
 
-const auth = AuthHelper.configure(server, bot);
 
 /*----------------------------------------------------------------------------------------
 * Bot Storage: This is a great spot to register the private state storage for your bot.
@@ -73,6 +72,8 @@ const auth = AuthHelper.configure(server, bot);
 // Using document DB for bot storage
 var bot = new builder.UniversalBot(connector)
                         .set('storage',tableStorage);
+
+const auth = AuthHelper.configure(server, bot);
 
 // Intercept trigger event (ActivityTypes.Trigger)
 bot.on('trigger', function (message) {
