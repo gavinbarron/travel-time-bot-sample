@@ -14,10 +14,11 @@ A simple echo bot for the Microsoft Bot Framework.
 
 const storageConnectionString = process.env.storageConnectionString;
 
+console.log(`storage: ${storageConnectionString}`);
 
 var documentDbOptions = {
-    host: process.env.docDbHost,
-    masterKey: process.env.docDbKey,
+    host: process.env.docDbHost || 'https://graph-functions-node.documents.azure.com:443',
+    masterKey: process.env.docDbKey || 'wvPvfGWLxJaUNMSEd9uyN15HCTphupReKJ64j8AYAqNsZjLxJMTb87zAKOV2C60UdOzJJG2E9wpvLrUsqnxDFQ==',
     database: process.env.docDbName || 'botdocdb',
     collection: process.env.docDbCollection ||'botdata'
 };
@@ -26,7 +27,7 @@ var documentDbOptions = {
 var botDocDbClient = new azure.DocumentDbClient(documentDbOptions);
 var tableStorage = new azure.AzureBotStorage({ gzipData: false }, botDocDbClient);
 
-
+console.log('create connector');
 // Create chat connector for communicating with the Bot Framework Service
 // We don't need to have these environment variables set in the development environment
 var connector = new builder.ChatConnector({
@@ -37,24 +38,30 @@ var connector = new builder.ChatConnector({
 });
 
 // Setup Restify Server
+
+console.log('create server');
 var server = restify.createServer();
-server.listen(function () {
+server.listen(3978, function () {
     console.log('%s listening to %s', server.name, server.url);
 });
 // Listen for messages from users
+console.log('listen for message posts');
 server.post('/api/messages', connector.listen());
 
 // Serve the magic code page for login.
+console.log('code page registered');
 server.get('/code', restify.plugins.serveStatic({
     'directory': path.join(__dirname, 'public'),
     'file': 'code.html'
 }));
 
 
+console.log('add restify plugins');
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
 // Setup the server with the bot secret
+console.log('add secret to session');
 server.use(expressSession({
     secret: cfg.BOTAUTH_SECRET,
     resave: true,
@@ -70,11 +77,16 @@ server.use(expressSession({
 
 // Create your bot with a function to receive messages from the user
 // Using document DB for bot storage
+
+console.log('configure storage');
 var bot = new builder.UniversalBot(connector)
                         .set('storage',tableStorage);
 
+console.log('add auth to bot');
 const auth = AuthHelper.configure(server, bot);
 
+
+console.log('registering dialogs and triggers');
 // Intercept trigger event (ActivityTypes.Trigger)
 bot.on('trigger', function (message) {
     // handle message from trigger function
@@ -101,9 +113,12 @@ bot.on('trigger', function (message) {
 });
 
 bot.on('conversationUpdate', function(update) {
+    console.log('Converastion update started');
     if(update.membersAdded) {
+        console.log('Members added');
         update.membersAdded.forEach(member => {
             if(member.id !== update.address.bot.id) {
+                console.log('starting /intro dialog');
                 bot.beginDialog(update.address, '/intro');
             }
         });
