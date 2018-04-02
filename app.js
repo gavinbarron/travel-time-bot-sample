@@ -31,8 +31,8 @@ console.log('create connector');
 // Create chat connector for communicating with the Bot Framework Service
 // We don't need to have these environment variables set in the development environment
 var connector = new builder.ChatConnector({
-    appId: process.env.MicrosoftAppId,
-    appPassword: process.env.MicrosoftAppPassword,
+    appId: process.env.azAppId,
+    appPassword: process.env.azAppPassword,
     stateEndpoint: process.env.BotStateEndpoint,
     openIdMetadata: process.env.BotOpenIdMetadata
 });
