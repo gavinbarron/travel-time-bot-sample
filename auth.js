@@ -38,7 +38,7 @@ const AuthHelper = {
                 clientSecret: AZUREAD_APP_PASSWORD,
                 identityMetadata: 'https://login.microsoftonline.com/' + AZUREAD_APP_REALM + '/v2.0/.well-known/openid-configuration',
                 skipUserProfile: false,
-                validateIssuer: false, // true causes us to fail....
+                validateIssuer: true, // true causes us to fail....
                 responseType: 'code',
                 responseMode: 'query',
                 scope: ['Calendars.ReadWrite', 'User.Read', 'offline_access', 'https://graph.microsoft.com/mail.read'],

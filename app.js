@@ -17,8 +17,8 @@ const storageConnectionString = process.env.storageConnectionString;
 console.log(`storage: ${storageConnectionString}`);
 
 var documentDbOptions = {
-    host: process.env.docDbHost || 'https://graph-functions-node.documents.azure.com:443',
-    masterKey: process.env.docDbKey || 'wvPvfGWLxJaUNMSEd9uyN15HCTphupReKJ64j8AYAqNsZjLxJMTb87zAKOV2C60UdOzJJG2E9wpvLrUsqnxDFQ==',
+    host: process.env.docDbHost,
+    masterKey: process.env.docDbKey,
     database: process.env.docDbName || 'botdocdb',
     collection: process.env.docDbCollection ||'botdata'
 };
@@ -41,7 +41,7 @@ var connector = new builder.ChatConnector({
 
 console.log('create server');
 var server = restify.createServer();
-server.listen(3978, function () {
+server.listen(process.env.Port || process.env.port || 3979, function () {
     console.log('%s listening to %s', server.name, server.url);
 });
 // Listen for messages from users
